@@ -1,0 +1,71 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+string getRandomWord()
+{
+    int randomNumber = rand() % (500'000);
+    ifstream dictFile{ "C:\\Users\\Work\\Downloads\\words.txt" };
+
+    string currentWord;
+    for (int i = 0; i < randomNumber; i++)
+    {
+        getline(dictFile, currentWord);
+    }
+
+    return currentWord;
+}
+
+int main()
+{
+    srand(time(0));
+
+    cout << "Player one - enter a (single) word to be guessed (by Player 2): " << endl;
+
+    string correctWord;
+    cin >> correctWord;
+
+    system("CLS");
+
+    string guessedWord;
+
+    for (int i = 0; i < correctWord.length(); i++)
+    {
+        guessedWord.append("*");
+    }
+
+    cout << guessedWord << endl;
+
+    while (guessedWord != correctWord)
+    {
+        cout << "Enter a letter that is in that word: " << endl;
+        string guessedLetter;
+        cin >> guessedLetter;
+
+        size_t foundPosition = correctWord.find(guessedLetter);
+
+        if (foundPosition != string::npos)
+        {
+            while (foundPosition != string::npos)
+            {
+                guessedWord.replace(foundPosition, 1, guessedLetter);
+                foundPosition = correctWord.find(guessedLetter, foundPosition + 1);
+            }
+
+            cout << "The UPDATED mystery word is: " << endl;
+            cout << guessedWord << endl;
+        }
+        else
+        {
+            cout << "NOT in the word - guess again" << endl;
+        }
+    }
+
+    cout << "You won!" << endl;
+
+    return 0;
+}
